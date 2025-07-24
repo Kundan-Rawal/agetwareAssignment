@@ -1,5 +1,5 @@
 import express from "express"
-import pool from "./database/db.js";
+import pool from "./database/db";
 import dotenv from 'dotenv';
 import path from "path"
 
@@ -17,7 +17,7 @@ app.get("/",(req,res)=>{
 
 app.get("/customers", async (req, res) => {
     try {
-        const result = await pool.query("SELECT * FROM customers;");
+        const result = await pool.query("SELECT * FROM customers");
         res.json(result.rows);
     } catch (err) {
         res.status(500).json({ error: "Database error", details: err.message });
