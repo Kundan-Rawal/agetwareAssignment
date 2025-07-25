@@ -3,13 +3,7 @@ import express from "express";
 import dotenv from 'dotenv';
 const router = express.Router();
 
-var base_url;
-
-if(process.env.PRODUCTION === true) {
-    base_url = process.env.BASE_URL
-}else{
-    base_url = ""
-}
+const base_url = `/api/v1`;
 
 router.post(`${base_url}/loans`, createLoan);
 
