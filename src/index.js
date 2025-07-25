@@ -1,14 +1,14 @@
 import express from "express"
 import pool from "./database/db.js";
 import dotenv from 'dotenv';
-import path from "path"
+
 import router from "./routes/routes.js";
 import cors from "cors";
 
 const app=express();
 app.use(express.json());
 
-const allowedOrigins = ["http://localhost:5173", "https://AgetWare.vercel.app"];
+const allowedOrigins = ["http://localhost:5173", "https://agetwarefrontend.vercel.app"];
 
 app.use(cors({
   origin: allowedOrigins,
