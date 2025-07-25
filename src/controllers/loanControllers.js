@@ -5,7 +5,7 @@ export const createLoan = (req,res)=>{
     const {customer_id,loan_amount,loan_period_years,interest_rate_yearly} = req.body
     const total_interest = (loan_amount * interest_rate_yearly * loan_period_years) / 100;
     const total_amount_payable = parseFloat(loan_amount) + parseFloat(total_interest);
-    const monthly_EMI = total_amount_payable / (loan_period_years * 12);
+    const monthly_EMI = Number((total_amount_payable / (loan_period_years * 12)).toFixed(2));
     const loan_id= uuidv4();
     const created_at = new Date().toISOString();
     const status = "ACTIVE";
