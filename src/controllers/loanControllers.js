@@ -68,3 +68,58 @@ export const recordPayment = async (req, res) => {
         return res.status(500).json({ error: "Database error", details: e.message });
     }
 }
+
+
+
+
+export const fetchTransactionHistory = async (req, res) => {
+    const {loan_id} = req.params;
+    const loanresult = await pool.query(`SELECT * FROM payments WHERE loan_id = $1`, [loan_id])
+    
+    if(loanresult.rows.length === 0) { 
+        return res.status(404).json({ error: "No Loan transaction Exist for this loan_id" });
+    }
+
+    const transactions = loanresult.rows.map((row) => ({
+        payment_id: row.payment_id,
+        amount: row.amount,
+        payment_type: row.payment_type,
+        payment_date: row.payment_date,
+    }));
+    const detailsMain = await pool.query(`SELECT * FROM loans WHERE loan_id = $1`, [loan_id])
+    const loan = detailsMain.rows[0]; 
+    const previousPayments = await pool.query(`SELECT COALESCE(SUM(amount), 0) as total_paid FROM payments WHERE loan_id = $1`, [loan_id]);
+    const totalPaid = parseFloat(previousPayments.rows[0].total_paid);
+    const remainingBalance = parseFloat(loan.total_amount) - totalPaid;
+        
+    const emis_left = Math.ceil(remainingBalance / parseFloat(loan.monthly_emi));
+
+
+    const detailsObject=detailsMain.rows[0]
+    try{
+        res.status(200).json(
+            {loan_id,
+            customer_id:detailsObject.customer_id,
+            principal: detailsObject.principal_amount,
+            total_amount: detailsObject.total_amount,
+            monthly_emi: detailsObject.monthly_emi,
+            amount_paid:totalPaid,
+            balance_amount:remainingBalance,
+            emis_left,
+            transactions,
+            
+        });
+
+
+    }catch(e){
+        console.error("Error fetching transaction history:", e);
+        return res.status(500).json({ error: "Database error", details: e.message });
+    }
+
+}
+
+
+export const fetchLoanDetails = async (req, res) => {
+    const {customer_id} = req.params;
+    
+}
