@@ -16,7 +16,7 @@ export const createLoan = (req,res)=>{
             VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9)`,
             [loan_id,customer_id,loan_amount,total_amount_payable,interest_rate_yearly,loan_period_years,
                 monthly_EMI,status,created_at,],)
-        res.status(201).json({ message: "Loan created successfully", loan_id });
+        res.status(201).json({ loan_id,customer_id,total_amount_payable,monthly_EMI,Message: "Loan created successfully" });
         }
             catch(e){
                 console.error("Error inserting loan data:", e);
