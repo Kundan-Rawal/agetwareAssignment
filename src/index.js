@@ -2,8 +2,12 @@ import express from "express"
 import pool from "./database/db.js";
 import dotenv from 'dotenv';
 import path from "path"
+import router from "./routes/routes.js";
 
 const app=express();
+app.use(express.json());
+
+app.use(router);
 
 app.listen(process.env.PORT,()=>{
     console.log("server Running On Port 3000")
