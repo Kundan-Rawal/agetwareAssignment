@@ -1,4 +1,4 @@
-import {createLoan} from "../controllers/loancontrollers.js";
+import {createLoan} from "../controllers/loanControllers.js";
 import express from "express";
 import dotenv from 'dotenv';
 const router = express.Router();
