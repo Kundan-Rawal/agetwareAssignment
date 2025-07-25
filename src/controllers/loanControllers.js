@@ -121,5 +121,27 @@ export const fetchTransactionHistory = async (req, res) => {
 
 export const fetchLoanDetails = async (req, res) => {
     const {customer_id} = req.params;
-    
-}
+
+    try{
+         const loanDetails = await pool.query(`SELECT * FROM loans WHERE customer_id = $1`, [customer_id]);
+    if(loanDetails.rows.length === 0) {
+        return res.status(404).json({ error: "No loans found for this customer" });
+    }
+
+    const noOfLoans = await pool.query(`select count(*) as total_loans from loans where customer_id = $1`, [customer_id]);
+    const totalLoans = noOfLoans.rows[0].total_loans;
+
+    console.log(loanDetails.rows)
+    console.log(totalLoans)
+    res.status(200).json({
+        customer_id,
+        total_loans: totalLoans,
+        loans: loanDetails.rows})
+    }catch(e){
+        console.error("Error fetching loan details:", e);
+        return res.status(500).json({ error: "Database error", details: e.message });
+    }
+
+   
+    };
+
